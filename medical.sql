@@ -1,38 +1,49 @@
 create database if not exists medical;
 use medical;
-drop table if exists patient;
-drop table if exists nok;
 
-drop table if exists dept;
-drop table if exists doctor;
-drop table if exists nurse;
-drop table if exists therapist;
-drop table if exists admin;
 
-drop table if exists calender;
-drop table if exists therapy;
-drop table if exists hospitalization;
-drop table if exists reservation;
+drop table if exists use_rehabilitation_equipment;
+drop table if exists rehabilitation_equipment;
+drop table if exists equipment_rental;
+drop table if exists equipment;
+
+drop table if exists manager_authority;
+drop table if exists therapist_authority;
+drop table if exists nurse_authorization;
+drop table if exists doctor_authority;
+drop table if exists nok_authority;
+drop table if exists patient_authority;
+drop table if exists authority;
+
+drop table if exists xray;
+drop table if exists inbody;
+drop table if exists questionnaire;
+
+
 drop table if exists record;
 drop table if exists diagnosis;
+drop table if exists reservation;
+drop table if exists hospitalization;
+drop table if exists quickness;
+drop table if exists flexibility;
+drop table if exists cardiopulmonary;
+drop table if exists muscular;
+drop table if exists physical;
+drop table if exists sense;
+drop table if exists perception;
+drop table if exists daily_life;
 
-drop table if exists questionnaire;
-drop table if exists inbody;
-drop table if exists xray;
+drop table if exists therapy;
+drop table if exists calender;
 
-drop table if exists authority;
-drop table if exists patient_authority;
-drop table if exists nok_authority;
-drop table if exists doctor_authority;
-drop table if exists nurse_authorization;
-drop table if exists therapist_authority;
-drop table if exists manager_authority;
+drop table if exists admin;
+drop table if exists therapist;
+drop table if exists nurse;
+drop table if exists doctor;
+drop table if exists dept;
 
-drop table if exists equipment;
-drop table if exists equipment_rental;
-drop table if exists rehabilitation_equipment;
-drop table if exists use_rehabilitation_equipment;
-
+drop table if exists nok;
+drop table if exists patient;
 
 
 create table patient (
@@ -197,11 +208,10 @@ create table calender (
 );
 
 
-create table therapy (
+create table excer_therapy (
     treatment_id varchar(50),
     patient_id varchar(50),
     reh_goal varchar(255) not null,
-    reh_therapy_kind varchar(50) not null,
     reh_therapy_date varchar(17) not null,
     use_drug varchar(255) not null,
     therapy_plan varchar(255) not null,
@@ -212,6 +222,135 @@ create table therapy (
     foreign key (therapist_id) references therapist(therapist_id) on delete set null
         
 );
+
+create table person_therapy (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    reh_goal varchar(255) not null,
+    reh_therapy_date varchar(17) not null,
+    use_drug varchar(255) not null,
+    therapy_plan varchar(255) not null,
+    therapy_point varchar(255) not null,
+    therapist_id varchar(50),
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (therapist_id) references therapist(therapist_id) on delete set null
+        
+);
+
+create table physical (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    phy_range varchar(50),
+    phy_strong int,
+    phy_ability varchar(50),
+    phy_degree int,
+    phy_hand varchar(50),
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references person_therapy(treatment_id) on delete cascade
+);
+
+create table sense (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    sense_touch int,
+    sense_ache int,
+    sense_loc int,
+    sense_origin int,
+    sense_see int,
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references person_therapy(treatment_id) on delete cascade
+);
+
+
+create table perception (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    percep_see varchar(50),
+    percep_body varchar(50),
+    percep_con varchar(50),
+    percep_re varchar(50),
+    percep_jud varchar(50),
+    percep_solve varchar(50),
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references person_therapy(treatment_id) on delete cascade
+);
+
+
+create table daily_life (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    daily_wash varchar(50),
+    daily_eat varchar(50),
+    daily_clothes varchar(50),
+    daily_toilet varchar(50),
+    daily_move varchar(50),
+    daily_yn varchar(50),
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references person_therapy(treatment_id) on delete cascade
+);
+
+create table quickness (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    quick_health varchar(50) not null,
+    quick_trial int not null,
+    quick_value int not null,
+    quick_zvalue int not null,
+    quick_number int not null,
+    quick_media varchar(255) not null,
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references excer_therapy(treatment_id) on delete cascade
+);
+
+create table flexibility (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    flex_health varchar(50) not null,
+    flex_trial int not null,
+    flex_value int not null,
+    flex_zvalue int not null,
+    flex_number int not null,
+    flex_media varchar(255) not null,
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references excer_therapy(treatment_id) on delete cascade
+);
+
+create table cardiopulmonary (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    cardi_health varchar(50) not null,
+    cardi_trial int not null,
+    cardi_value int not null,
+    cardi_zvalue int not null,
+    cardi_number int not null,
+    cardi_media varchar(255) not null,
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references excer_therapy(treatment_id) on delete cascade
+);
+
+
+create table muscular (
+    treatment_id varchar(50),
+    patient_id varchar(50),
+    mus_health varchar(50) not null,
+    mus_trial int not null,
+    mus_value int not null,
+    mus_zvalue int not null,
+    mus_number int not null,
+    mus_media varchar(255) not null,
+    primary key (treatment_id, patient_id),
+    foreign key (patient_id) references patient(patient_id) on delete cascade,
+    foreign key (treatment_id) references excer_therapy(treatment_id) on delete cascade
+);
+
 
 
 create table hospitalization (
